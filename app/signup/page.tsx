@@ -1,10 +1,9 @@
 import { authenticate, signUp } from "@/hooks/authentication";
-import { createClient } from "@/util/supabase/server";
 import Image from "next/image";
 import { Form } from "./form";
+import supabase from "@/util/supabase/server";
 
 export default async function SignUp() {
-  const supabase = await createClient();
   console.log((await supabase.auth.getSession()).data.session ? "logged in" : "not logged");
 
   return (
