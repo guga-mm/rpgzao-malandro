@@ -1,12 +1,11 @@
 'use server';
 
+import supabase from '@/util/supabase/server';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/util/supabase/server';
 
 export async function authenticate(
     formData: FormData
 ) {
-    const supabase = await createClient();
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
@@ -26,7 +25,6 @@ export async function signUp(
     currentState: { message: string },
     formData: FormData
 ) {
-    const supabase = await createClient();
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -57,7 +55,6 @@ export async function sendPasswordRecoveryRequest(
     currentState: { message: string },
     formData: FormData
 ) {
-    const supabase = await createClient();
     const email = formData.get('email') as string;
 
     const getUrl = () => {
@@ -82,7 +79,6 @@ export async function recoverPassword(
     currentState: { message: string },
     formData: FormData
 ) {
-    const supabase = await createClient();
     const password = formData.get('password') as string;
     const confirmation = formData.get('confirmation') as string;
 
