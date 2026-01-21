@@ -50,5 +50,5 @@ export async function signUp(
         redirect("/");
     }
 
-    return {};
+    return { message: '' };
 }
