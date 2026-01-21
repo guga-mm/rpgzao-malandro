@@ -4,8 +4,9 @@ import { createClient } from './lib/supabase/server'
 
 export async function proxy(request: NextRequest) {
     const supabase = await createClient();
+    const { pathname } = request.nextUrl;
 
-    if (request.url.endsWith("signin") || request.url.endsWith("signup")) {
+    if (pathname.startsWith("/signin") || pathname.startsWith("/signup")) {
         if ((await supabase.auth.getSession()).data.session) {
             return NextResponse.redirect(new URL("/", request.url));
         } else {
