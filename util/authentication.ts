@@ -72,7 +72,7 @@ export async function sendPasswordRecoveryRequest(
     });
 
     if (error) {
-        return { message: error.message }
+        return { message: error.message };
     } else {
         return { message: 'Email de recuperação enviado!' };
     }
