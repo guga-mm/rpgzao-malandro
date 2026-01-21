@@ -93,7 +93,7 @@ export async function recoverPassword(
     });
 
     if (error) {
-        return { message: error.message }
+        return { message: error.message };
     } else {
         redirect("/");
     }

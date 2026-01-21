@@ -1,7 +1,7 @@
 import { authenticate, signUp } from "@/util/authentication";
 import { createClient } from "@/util/supabase/server";
 import Image from "next/image";
-import { Form } from "./form";
+import { Form } from "../../../components/password-recovery-form";
 
 export default async function SignUp() {
   const supabase = await createClient();
