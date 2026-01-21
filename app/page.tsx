@@ -1,5 +1,5 @@
 import { authenticate, signUp } from "@/hooks/authentication";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/util/supabase/server";
 import Image from "next/image";
 
 export default async function Home() {

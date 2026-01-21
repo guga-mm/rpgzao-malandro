@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createClient } from './lib/supabase/server'
+import { createClient } from './util/supabase/server'
 
 export async function proxy(request: NextRequest) {
     const supabase = await createClient();
