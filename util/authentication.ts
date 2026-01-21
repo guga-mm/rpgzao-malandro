@@ -89,12 +89,12 @@ export async function recoverPassword(
     if (confirmation != password) return { message: 'Os campos de confirmação e senha estão diferentes!' }
 
     const { data, error } = await supabase.auth.updateUser({
-        password: password
+        password
     });
 
     if (error) {
-        return { message: JSON.stringify(data) + JSON.stringify(error) };
+        return { message: error.message }
     } else {
-        return { message: JSON.stringify(data) + JSON.stringify(error) };
+        redirect("/");
     }
 }

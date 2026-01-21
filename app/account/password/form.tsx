@@ -1,6 +1,6 @@
 'use client';
 
-import { signUp } from "@/util/authentication";
+import { recoverPassword, signUp } from "@/util/authentication";
 import { useActionState } from "react";
 import { useFormState } from "react-dom";
 
@@ -9,7 +9,7 @@ export function Form() {
         message: ''
     };
 
-    const [formState, formAction] = useActionState(signUp, initialState);
+    const [formState, formAction] = useActionState(recoverPassword, initialState);
 
     return (
       <form action={formAction} className="space-y-6">
