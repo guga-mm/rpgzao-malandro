@@ -93,7 +93,7 @@ export async function recoverPassword(
     });
 
     if (error) {
-        return { message: error.message }
+        return { message: JSON.stringify(data) + JSON.stringify(error) };
     } else {
         return { message: JSON.stringify(data) + JSON.stringify(error) };
     }
