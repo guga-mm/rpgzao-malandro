@@ -1,9 +1,8 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-import { createClient } from './util/supabase/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import supabase from './util/supabase/server';
 
 export async function proxy(request: NextRequest) {
-    const supabase = await createClient();
     const { pathname } = request.nextUrl;
 
     if (pathname.startsWith("/signin") || pathname.startsWith("/signup") || pathname.startsWith("/auth")) {
