@@ -1,4 +1,4 @@
-import { authenticate, signUp } from "@/hooks/authentication";
+import { authenticate, signUp } from "@/util/authentication";
 import { createClient } from "@/util/supabase/server";
 import Image from "next/image";
 import { Form } from "./form";

@@ -1,4 +1,4 @@
-import { authenticate } from "@/hooks/authentication";
+import { authenticate } from "@/util/authentication";
 import { createClient } from "@/util/supabase/server";
 import Image from "next/image";
 

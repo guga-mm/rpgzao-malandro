@@ -1,6 +1,6 @@
 'use client';
 
-import { sendPasswordRecoveryRequest } from "@/hooks/authentication";
+import { sendPasswordRecoveryRequest } from "@/util/authentication";
 import { useActionState } from "react";
 import { useFormState } from "react-dom";
 

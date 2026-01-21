@@ -1,6 +1,6 @@
 'use client';
 
-import { signUp } from "@/hooks/authentication";
+import { signUp } from "@/util/authentication";
 import { useActionState } from "react";
 import { useFormState } from "react-dom";
 
