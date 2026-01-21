@@ -20,6 +20,8 @@ export async function GET(request: { url: string | URL; }) {
       // redirect user to specified redirect URL or root of app
       await supabase.auth.setSession(data.session!);
       redirect(next);
+    } else {
+        throw error;
     }
   }
 
