@@ -1,49 +1,45 @@
-import { authenticate } from "@/util/authentication";
+
 import { createClient } from "@/util/supabase/server";
-import Image from "next/image";
+import Link from 'next/link'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dices } from 'lucide-react'
+import Form from "@/components/signin-form";
 
 export default async function SignIn() {
   const supabase = await createClient();
   console.log((await supabase.auth.getSession()).data.session ? "logged in" : "not logged");
 
   return (
-  <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img src="/image/torturado.webp" alt="Your Company" className="mx-auto h-12 w-auto" />
-      <h2 className="mt-5 text-center text-2xl/9 font-bold tracking-tight text-white">Faça login!</h2>
-    </div>
-
-    <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form action={authenticate} className="space-y-6">
-        <div>
-          <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">Email</label>
-          <div className="mt-2">
-            <input id="email" type="email" name="email" required autoComplete="email" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md">
+        <div className="flex flex-col items-center mb-8">
+          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-primary mb-4">
+            <Dices className="h-8 w-8 text-primary-foreground" />
           </div>
+          <h1 className="text-2xl font-bold text-foreground">RPGzão Malandro</h1>
+          <p className="text-muted-foreground text-sm mt-1">O portal dos nerdolas</p>
         </div>
 
-        <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="password" className="block text-sm/6 font-medium text-gray-100">Senha</label>
-            <div className="text-sm">
-              <a href="/signin/recovery" className="font-semibold text-indigo-400 hover:text-indigo-300">Esqueceu a senha?</a>
+        <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-xl">Seja bem-vinde!</CardTitle>
+            <CardDescription>Faça login para continuar suas nerdices</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form />
+            <div className="mt-6 text-center text-sm text-muted-foreground">
+              {"Não possui uma conta? "}
+              <Link href="/signup" className="text-primary hover:text-primary/80 font-medium transition-colors">
+                Crie uma.
+              </Link>
             </div>
-          </div>
-          <div className="mt-2">
-            <input id="password" type="password" name="password" required autoComplete="current-password" className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div>
-          <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Entrar</button>
-        </div>
-      </form>
-
-      <p className="mt-5 text-center text-sm/6 text-gray-400">
-        Não tem uma conta? 
-        <a href="/signup" className="font-semibold text-indigo-400 hover:text-indigo-300"> Crie uma.</a>
-      </p>
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          Ao fazer login, você concorda em virar o Torturado
+        </p>
+      </div>
     </div>
-  </div>
   );
 }

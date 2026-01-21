@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/util/supabase/server';
 
 export async function authenticate(
+    currentState: { error: string },
     formData: FormData
 ) {
     const supabase = await createClient();
@@ -16,14 +17,14 @@ export async function authenticate(
     });
 
     if (error) {
-        console.error(error.message);
+        return { error: error.message }
     } else {
         redirect("/");
     }
 }
 
 export async function signUp(
-    currentState: { message: string },
+    currentState: { error: string },
     formData: FormData
 ) {
     const supabase = await createClient();
@@ -32,7 +33,7 @@ export async function signUp(
     const password = formData.get('password') as string;
     const confirmation = formData.get('confirmation') as string;
 
-    if (confirmation != password) return { message: 'Os campos de confirmação e senha estão diferentes!' }
+    if (confirmation != password) return { error: 'Os campos de confirmação e senha estão diferentes!' }
 
     let { data, error } = await supabase.auth.signUp({
         email,
@@ -45,16 +46,15 @@ export async function signUp(
     });
 
     if (error) {
-        return { message: error.message }
+        return { error: error.message }
     } else {
         redirect("/");
-        return { message: '' };
     }
 
 }
 
 export async function sendPasswordRecoveryRequest(
-    currentState: { message: string },
+    currentState: { error: string, message: string },
     formData: FormData
 ) {
     const supabase = await createClient();
@@ -72,28 +72,28 @@ export async function sendPasswordRecoveryRequest(
     });
 
     if (error) {
-        return { message: error.message };
+        return { error: error.message, message: '' };
     } else {
-        return { message: 'Email de recuperação enviado!' };
+        return { error: '', message: 'Email de recuperação enviado!' };
     }
 }
 
 export async function recoverPassword(
-    currentState: { message: string },
+    currentState: { error: string },
     formData: FormData
 ) {
     const supabase = await createClient();
     const password = formData.get('password') as string;
     const confirmation = formData.get('confirmation') as string;
 
-    if (confirmation != password) return { message: 'Os campos de confirmação e senha estão diferentes!' }
+    if (confirmation != password) return { error: 'Os campos de confirmação e senha estão diferentes!' }
 
     const { data, error } = await supabase.auth.updateUser({
         password
     });
 
     if (error) {
-        return { message: error.message };
+        return { error: error.message };
     } else {
         redirect("/");
     }

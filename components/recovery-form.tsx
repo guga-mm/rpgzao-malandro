@@ -2,31 +2,58 @@
 
 import { sendPasswordRecoveryRequest } from "@/util/authentication";
 import { useActionState } from "react";
-import { useFormState } from "react-dom";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Loader2, Mail, } from 'lucide-react'
 
 export function Form() {
-    const initialState = {
-        message: ''
-    };
+  const initialState = {
+    error: '',
+    message: '',
+  };
 
-    const [formState, formAction] = useActionState(sendPasswordRecoveryRequest, initialState);
+  const [formState, formAction, isPending] = useActionState(sendPasswordRecoveryRequest, initialState);
 
-    return (
-        <form action={formAction} className="space-y-6">        
-        <div>
-          <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">Email</label>
-          <div className="mt-2">
-            <input id="email" type="email" name="email" required className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
+  return (
+    <form action={formAction} className="space-y-4">
+      {formState.error && (
+        <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+          {formState.error}
         </div>
+      )}
 
-        {formState?.message && (<div>
-          <p className="justify-center">{formState.message}</p>
-        </div>)}
-
-        <div>
-          <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Recuperar conta</button>
+      {formState.message && (
+        <div className="p-3 rounded-md bg-accent/10 border border-accent/20 text-accent text-sm">
+          {formState.message}
         </div>
-      </form>
-    )
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="guga@email.com"
+          disabled={isPending}
+          className="bg-input/50"
+        />
+      </div>
+
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Enviando...
+          </>
+        ) : (
+          <>
+            <Mail className="mr-2 h-4 w-4" />
+            Enviar confirmação
+          </>
+        )}
+      </Button>
+    </form>
+  )
 }

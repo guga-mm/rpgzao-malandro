@@ -2,56 +2,107 @@
 
 import { signUp } from "@/util/authentication";
 import { useActionState } from "react";
-import { useFormState } from "react-dom";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 export function Form() {
-    const initialState = {
-        message: ''
-    };
+  const initialState = {
+    error: ''
+  };
 
-    const [formState, formAction] = useActionState(signUp, initialState);
+  const [formState, formAction, isPending] = useActionState(signUp, initialState);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    return (
-        <form action={formAction} className="space-y-6">
-        <div>
-          <label htmlFor="name" className="block text-sm/6 font-medium text-gray-100">Nome de Exibição</label>
-          <div className="mt-2">
-            <input id="name" type="text" name="name" required className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
+  return (
+    <form action={formAction} className="space-y-4">
+      {formState.error && (
+        <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+          {formState.error}
         </div>
-        
-        <div>
-          <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">Email</label>
-          <div className="mt-2">
-            <input id="email" type="email" name="email" required className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
-        </div>
+      )}
 
-        <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="password" className="block text-sm/6 font-medium text-gray-100">Senha</label>
-          </div>
-          <div className="mt-2">
-            <input id="password" type="password" name="password" required className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="username">Nome de Exibição</Label>
+        <Input
+          id="username"
+          name="name"
+          type="text"
+          placeholder="Escolha seu nome"
+          disabled={isPending}
+          className="bg-input/50"
+        />
+      </div>
 
-        <div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="confirmation" className="block text-sm/6 font-medium text-gray-100">Confirme a senha</label>
-          </div>
-          <div className="mt-2">
-            <input id="confirmation" type="password" name="confirmation" required className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
-          </div>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="guga@email.com"
+          disabled={isPending}
+          className="bg-input/50"
+        />
+      </div>
 
-        {formState?.message && (<div>
-          <p className="justify-center text-red-300">{formState.message}</p>
-        </div>)}
-
-        <div>
-          <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Criar conta</button>
+      <div className="space-y-2">
+        <Label htmlFor="password">Senha</Label>
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Crie uma senha"
+            disabled={isPending}
+            className="bg-input/50 pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            tabIndex={-1}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
         </div>
-      </form>
-    )
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword">Confirme a Senha</Label>
+        <div className="relative">
+          <Input
+            id="confirmPassword"
+            name="confirmation"
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="Confirme a sua senha"
+            disabled={isPending}
+            className="bg-input/50 pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            tabIndex={-1}
+          >
+            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+
+      <Button type="submit" className="w-full" disabled={isPending}>
+        {isPending ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Criando conta...
+          </>
+        ) : (
+          'Criar conta'
+        )}
+      </Button>
+    </form>
+  )
 }
