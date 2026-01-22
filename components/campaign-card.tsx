@@ -4,31 +4,29 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Users, Crown, ChevronRight } from 'lucide-react'
-import type { Campaign } from '@/lib/types'
+import type { Campaign, User } from '@/lib/types'
 import Link from 'next/link'
 
 interface CampaignCardProps {
   campaign: Campaign
   onJoinRequest?: (campaignId: string) => void
-  currentUser?: string
+  currentUser?: User
 }
 
-export function CampaignCard({ campaign, onJoinRequest, currentUser = 'Alex the Brave' }: CampaignCardProps) {
-  const isPlayer = campaign.currentPlayers.includes(currentUser)
-  const hasPendingRequest = campaign.pendingRequests.includes(currentUser)
+export function CampaignCard({ campaign, onJoinRequest, currentUser }: CampaignCardProps) {
+  const isPlayer = campaign.currentPlayers?.some(player => player.id == currentUser?.id);
+  const hasPendingRequest = /* campaign.pendingRequests.includes(currentUser) */ false;
   const isGM = campaign.gameMaster === currentUser
-  const isFull = campaign.currentPlayers.length >= campaign.maxPlayers
+  const isFull = (campaign.currentPlayers?.length || 0) >= (campaign.maxPlayers || 0);
 
   const statusColors = {
-    'recruiting': 'bg-chart-3/20 text-chart-3 border-chart-3/30',
-    'in-progress': 'bg-primary/20 text-primary border-primary/30',
+    'active': 'bg-chart-3/20 text-chart-3 border-chart-3/30',
     'completed': 'bg-muted text-muted-foreground border-muted'
   }
 
   const statusLabels = {
-    'recruiting': 'Recruiting',
-    'in-progress': 'In Progress',
-    'completed': 'Completed'
+    'active': 'Ativa',
+    'completed': 'Finalizada'
   }
 
   return (
@@ -42,8 +40,8 @@ export function CampaignCard({ campaign, onJoinRequest, currentUser = 'Alex the 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
         <div className="absolute bottom-3 left-3 right-3">
-          <Badge className={statusColors[campaign.status]}>
-            {statusLabels[campaign.status]}
+          <Badge className={statusColors[campaign.status || "completed"]}>
+            {statusLabels[campaign.status || "completed"]}
           </Badge>
         </div>
       </div>
@@ -65,11 +63,11 @@ export function CampaignCard({ campaign, onJoinRequest, currentUser = 'Alex the 
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Crown className="h-4 w-4 text-primary" />
-            <span>{campaign.gameMaster}</span>
+            <span>{campaign.gameMaster?.name}</span>
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Users className="h-4 w-4" />
-            <span>{campaign.currentPlayers.length}/{campaign.maxPlayers}</span>
+            <span>{campaign.currentPlayers?.length}/{campaign.maxPlayers}</span>
           </div>
         </div>
       </CardContent>
@@ -82,9 +80,9 @@ export function CampaignCard({ campaign, onJoinRequest, currentUser = 'Alex the 
           </Link>
         </Button>
         
-        {!isGM && !isPlayer && !hasPendingRequest && campaign.status === 'recruiting' && !isFull && (
+        {!isGM && !isPlayer && !hasPendingRequest && campaign.status === 'active' && !isFull && (
           <Button 
-            onClick={() => onJoinRequest?.(campaign.id)}
+            onClick={() => onJoinRequest?.(campaign.id || '')}
             className="flex-1"
           >
             Request to Join

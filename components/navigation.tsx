@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/tooltip'
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/campaigns', label: 'Campaigns', icon: ScrollText },
-  { href: '/characters', label: 'Characters', icon: Users },
+  { href: '/', label: 'Início', icon: Home },
+  { href: '/campaigns', label: 'Campanhas', icon: ScrollText },
+  { href: '/characters', label: 'Personagens', icon: Users },
   { href: '/smash-or-pass', label: 'Smash or Pass', icon: Flame },
 ]
 
@@ -29,22 +29,22 @@ export function Navigation() {
       {/* Desktop Sidebar */}
       <aside className="fixed left-0 top-0 z-50 hidden h-screen w-[72px] flex-col items-center border-r border-border bg-sidebar py-3 md:flex">
         {/* Logo */}
-        <Link 
-          href="/" 
+        <Link
+          href="/"
           className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-all hover:rounded-xl"
         >
           <Swords className="h-6 w-6" />
         </Link>
-        
+
         <div className="mx-auto my-2 h-[2px] w-8 rounded-full bg-border" />
 
         {/* Nav Items */}
         <nav className="flex flex-1 flex-col items-center gap-2">
           {navItems.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href || 
+            const isActive = pathname === item.href ||
               (item.href !== '/' && pathname.startsWith(item.href))
-            
+
             return (
               <Tooltip key={item.href}>
                 <TooltipTrigger asChild>
@@ -86,13 +86,6 @@ export function Navigation() {
 
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 flex h-14 items-center justify-between border-b border-border bg-background px-4 md:hidden">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Swords className="h-4 w-4" />
-          </div>
-          <span className="font-bold">Quest Board</span>
-        </Link>
-
         <Button
           variant="ghost"
           size="icon"
@@ -100,6 +93,13 @@ export function Navigation() {
         >
           {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </Button>
+
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Swords className="h-4 w-4" />
+          </div>
+        </Link>
+
       </header>
 
       {/* Mobile Menu Overlay */}
@@ -114,13 +114,13 @@ export function Navigation() {
       )}>
         <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase text-muted-foreground">
           <Hash className="h-4 w-4" />
-          Navigation
+          Navegação
         </div>
         {navItems.map((item) => {
           const Icon = item.icon
-          const isActive = pathname === item.href || 
+          const isActive = pathname === item.href ||
             (item.href !== '/' && pathname.startsWith(item.href))
-          
+
           return (
             <Link
               key={item.href}
@@ -138,7 +138,7 @@ export function Navigation() {
             </Link>
           )
         })}
-        
+
         <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3 rounded-md bg-secondary p-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-foreground">
             <span className="text-xs font-bold">A</span>
