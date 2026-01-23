@@ -8,7 +8,7 @@ interface AnnouncementCardProps {
 }
 
 export function AnnouncementCard({ announcement }: AnnouncementCardProps) {
-  const date = new Date(announcement.createdAt).toLocaleDateString('en-US', {
+  const date = new Date(announcement.createdAt ?? '').toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric'

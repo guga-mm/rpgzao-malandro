@@ -88,13 +88,14 @@ export default function CampaignsPage() {
                     gamemaster: (await supabase.auth.getSession()).data.session?.user?.id
                 },
             ])
-            .select("id, created_at");
+            .select("id, created_at, gamemaster ( id, display_name )");
 
         if (error) throw error;
 
         if (data) {
             campaign.created_at = data[0].created_at;
             campaign.id = data[0].id;
+            campaign.gamemaster = { id: (data[0].gamemaster as any).id, name: (data[0].gamemaster as any).display_name } as User;
             setCampaigns([campaign, ...campaigns]);
             setCreateDialogOpen(false);
         }
