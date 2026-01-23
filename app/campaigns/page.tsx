@@ -43,7 +43,7 @@ export default function CampaignsPage() {
 
             let { data: campaign, error: campaignError } = await supabase
                 .from('campaign')
-                .select('id, title, description, image_url, gamemaster (display_name), game, player_limit, campaign_players ( userid ), status');
+                .select('id, title, description, image_url, gamemaster (id, display_name), game, player_limit, campaign_players ( userid ), status');
 
             if (campaignError) throw campaignError;
 
@@ -52,12 +52,13 @@ export default function CampaignsPage() {
                     id: row.id,
                     title: row.title,
                     description: row.description,
-                    imageUrl: row.image_url,
-                    gameMaster: {
-                        name: row.gamemaster.display_name,
+                    image_url: row.image_url,
+                    gamemaster: {
+                        id: (row.gamemaster as any).id,
+                        name: (row.gamemaster as any).display_name,
                     } as User,
-                    gameSystem: row.game,
-                    maxPlayers: row.player_limit as number,
+                    game: row.game,
+                    player_limit: row.player_limit as number,
                     currentPlayers: row.campaign_players.map(player => ({ id: player.userid } as User)),
                     status: row.status,
                 } as Campaign;
@@ -70,24 +71,39 @@ export default function CampaignsPage() {
         fetchData();
     }, [supabase, setCampaigns]);
 
-    const handleCreateCampaign = (newCampaign: Omit<Campaign, 'id' | 'createdAt' | 'currentPlayers' | 'pendingRequests' | 'announcements' | 'resources'>) => {
+    const handleCreateCampaign = async (newCampaign: Omit<Campaign, 'id' | 'createdAt' | 'gamemaster' | 'currentPlayers' | 'pendingRequests' | 'announcements' | 'resources'>) => {
         const campaign: Campaign = {
             ...newCampaign,
-            id: `camp-${Date.now()}`,
-            createdAt: new Date().toISOString(),
             currentPlayers: [],
             pendingRequests: [],
             announcements: [],
             resources: []
+        };
+
+        const { data, error } = await supabase
+            .from('campaign')
+            .insert([
+                {
+                    ...newCampaign,
+                    gamemaster: (await supabase.auth.getSession()).data.session?.user?.id
+                },
+            ])
+            .select("id, created_at");
+
+        if (error) throw error;
+
+        if (data) {
+            campaign.created_at = data[0].created_at;
+            campaign.id = data[0].id;
+            setCampaigns([campaign, ...campaigns]);
+            setCreateDialogOpen(false);
         }
-        setCampaigns([campaign, ...campaigns])
-        setCreateDialogOpen(false)
     }
 
     const filteredCampaigns = campaigns.filter(campaign => {
         const matchesSearch = campaign.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            campaign.gameSystem?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            campaign.gameMaster?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+            campaign.game?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            campaign.gamemaster?.name?.toLowerCase().includes(searchQuery.toLowerCase())
 
         const matchesStatus = statusFilter === 'all' || campaign.status === statusFilter
 

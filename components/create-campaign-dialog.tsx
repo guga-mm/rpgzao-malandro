@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import type { Campaign } from '@/lib/types'
+import { createClient } from "@/util/supabase/client"
 
 interface CreateCampaignDialogProps {
   open: boolean
@@ -31,40 +32,38 @@ interface CreateCampaignDialogProps {
 }
 
 const gameSystems = [
-  'D&D 5e',
-  'Pathfinder 2e',
-  'Call of Cthulhu 7e',
-  'Cyberpunk RED',
-  'Blades in the Dark',
-  'Vampire: The Masquerade',
-  'Shadowrun 6e',
-  'FATE Core',
-  'Other'
+  'Ordem Paranormal RPG',
+  'D&D',
+  'Call of Cthulhu',
+  'Daggerheart',
+  'Candela Obscura',
+  'Sacramento RPG',
+  'Outro'
 ]
 
 export function CreateCampaignDialog({ open, onOpenChange, onSubmit }: CreateCampaignDialogProps) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [gameSystem, setGameSystem] = useState('')
-  const [maxPlayers, setMaxPlayers] = useState('4')
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedGameSystem, setSelectedGameSystem] = useState('');
+  const [gameSystem, setGameSystem] = useState('');
+  const [maxPlayers, setMaxPlayers] = useState('4');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     onSubmit({
       title,
       description,
-      imageUrl: '/campaigns/default.jpg',
-      gameMaster: 'Alex the Brave',
-      gameSystem,
-      maxPlayers: parseInt(maxPlayers),
-      status: 'recruiting'
+      image_url: '/campaigns/default.jpg',
+      game: gameSystem,
+      player_limit: parseInt(maxPlayers),
+      status: 'active'
     })
 
     // Reset form
     setTitle('')
     setDescription('')
-    setGameSystem('')
+    setSelectedGameSystem('')
     setMaxPlayers('4')
   }
 
@@ -92,7 +91,9 @@ export function CreateCampaignDialog({ open, onOpenChange, onSubmit }: CreateCam
 
           <div className="space-y-2">
             <Label htmlFor="gameSystem">Game System</Label>
-            <Select value={gameSystem} onValueChange={setGameSystem} required>
+            <Select value={selectedGameSystem}
+              onValueChange={(value) => {setSelectedGameSystem(value); setGameSystem(value);}}
+              required>
               <SelectTrigger>
                 <SelectValue placeholder="Select a game system" />
               </SelectTrigger>
@@ -104,6 +105,15 @@ export function CreateCampaignDialog({ open, onOpenChange, onSubmit }: CreateCam
                 ))}
               </SelectContent>
             </Select>
+            {selectedGameSystem == 'Outro' ? (
+              <Input
+                id="othergame"
+                placeholder="Sistema underground que ninguém nunca ouviu falar"
+                value={gameSystem}
+                onChange={(e) => setGameSystem(e.target.value)}
+                required
+              />
+            ) : ""}
           </div>
 
           <div className="space-y-2">
@@ -138,7 +148,7 @@ export function CreateCampaignDialog({ open, onOpenChange, onSubmit }: CreateCam
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={!title || !gameSystem || !description}>
+            <Button type="submit" disabled={!title || !selectedGameSystem || !description}>
               Create Campaign
             </Button>
           </DialogFooter>

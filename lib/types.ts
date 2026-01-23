@@ -11,16 +11,16 @@ export interface Campaign {
   id?: string
   title?: string
   description?: string
-  imageUrl?: string
-  gameMaster?: User
-  gameSystem?: string
-  maxPlayers?: number
+  image_url?: string
+  gamemaster?: User
+  game?: string
+  player_limit?: number
   currentPlayers?: User[]
-  pendingRequests?: string[]
+  pendingRequests?: User[]
   announcements?: CampaignAnnouncement[]
   resources?: CampaignResource[]
   status?: 'active' | 'completed'
-  createdAt?: string
+  created_at?: string
 }
 
 export interface CampaignAnnouncement {
@@ -33,7 +33,8 @@ export interface CampaignAnnouncement {
 export interface CampaignResource {
   id?: string
   name?: string
-  type?: 'pdf' | 'image' | 'link' | 'document'
+  description?: string
+  type?: string
   url?: string
 }
 

@@ -16,8 +16,12 @@ interface CampaignCardProps {
 export function CampaignCard({ campaign, onJoinRequest, currentUser }: CampaignCardProps) {
   const isPlayer = campaign.currentPlayers?.some(player => player.id == currentUser?.id);
   const hasPendingRequest = /* campaign.pendingRequests.includes(currentUser) */ false;
-  const isGM = campaign.gameMaster === currentUser
-  const isFull = (campaign.currentPlayers?.length || 0) >= (campaign.maxPlayers || 0);
+  const isGM = campaign.gamemaster?.id === currentUser?.id;
+  const isFull = (campaign.currentPlayers?.length || 0) >= (campaign.player_limit || 0);
+
+  console.log(isGM);
+  console.log(campaign.gamemaster?.id);
+  console.log(currentUser?.id);
 
   const statusColors = {
     'active': 'bg-chart-3/20 text-chart-3 border-chart-3/30',
@@ -50,7 +54,7 @@ export function CampaignCard({ campaign, onJoinRequest, currentUser }: CampaignC
         <div className="flex items-start justify-between gap-2">
           <div>
             <h3 className="font-semibold leading-tight text-balance">{campaign.title}</h3>
-            <p className="text-sm text-muted-foreground">{campaign.gameSystem}</p>
+            <p className="text-sm text-muted-foreground">{campaign.game}</p>
           </div>
         </div>
       </CardHeader>
@@ -63,11 +67,11 @@ export function CampaignCard({ campaign, onJoinRequest, currentUser }: CampaignC
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Crown className="h-4 w-4 text-primary" />
-            <span>{campaign.gameMaster?.name}</span>
+            <span>{campaign.gamemaster?.name}</span>
           </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Users className="h-4 w-4" />
-            <span>{campaign.currentPlayers?.length}/{campaign.maxPlayers}</span>
+            <span>{campaign.currentPlayers?.length}/{campaign.player_limit}</span>
           </div>
         </div>
       </CardContent>
