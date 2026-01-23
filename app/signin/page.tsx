@@ -23,16 +23,10 @@ export default async function SignIn() {
         <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
           <CardHeader className="text-center pb-4">
             <CardTitle className="text-xl">Seja bem-vinde!</CardTitle>
-            <CardDescription>Faça login para continuar suas nerdices</CardDescription>
+            <CardDescription>Faça login com o Discord para continuar suas nerdices</CardDescription>
           </CardHeader>
           <CardContent>
             <Form />
-            <div className="mt-6 text-center text-sm text-muted-foreground">
-              {"Não possui uma conta? "}
-              <Link href="/signup" className="text-primary hover:text-primary/80 font-medium transition-colors">
-                Crie uma.
-              </Link>
-            </div>
           </CardContent>
         </Card>
 

@@ -8,19 +8,30 @@ export async function authenticate(
     formData: FormData
 ) {
     const supabase = await createClient();
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
 
-    let { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+    const getUrl = () => {
+        let url = process?.env?.NEXT_PUBLIC_VERCEL_URL ?? 'http://localhost:3000/';
+        url = url.startsWith('http') ? url : `https://${url}`;
+        url = url.endsWith('/') ? url : `${url}/`;
+        return url;
+    };
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord',
+        options: {
+            redirectTo: getUrl() + 'auth/callback',
+        },
     });
 
     if (error) {
-        return { error: error.message }
-    } else {
-        redirect("/");
+        return { error: error.message };
     }
+
+    if (data.url) {
+        redirect(data.url) // use the redirect API for your server framework
+    };
+
+    return { error: '' };
 }
 
 export async function signUp(
